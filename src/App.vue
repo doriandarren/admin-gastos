@@ -22,6 +22,8 @@ const gasto = reactive({
   fecha: Date.now()
 })
 
+const gastos = ref([])
+
 const definirPresupuesto = (cantidad) => {
   presupuesto.value = cantidad
   disponible.value = cantidad
@@ -41,6 +43,21 @@ const ocultarModal = () => {
     modal.mostar = false
   }, 300);
 }
+
+
+
+
+
+const guardarGasto = () => {
+  gastos.value.push({
+    ...gasto,
+    id: 123,
+  })
+}
+
+
+
+
 
 </script>
 
@@ -83,6 +100,7 @@ const ocultarModal = () => {
       <Modal 
         v-if="modal.mostar"
         @ocultar-modal="ocultarModal"
+        @guardar-gasto="guardarGasto"
         :modal="modal"
         v-model:nombre="gasto.nombre"
         v-model:cantidad="gasto.cantidad"

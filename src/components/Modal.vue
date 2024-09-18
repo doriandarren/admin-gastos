@@ -14,8 +14,11 @@
         >
             <form
                 class="nuevo-gasto"
+                @submit.prevent="agregarGasto"
             >
                 <legend>Añadir Gasto</legend>
+
+                <Alerta v-if="error">{{ error }}</Alerta>
 
                 <div class="campo">
                     <label for="nombre">Nombre Gasto:</label>
@@ -71,13 +74,18 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import cerrarModal from '../assets/img/cerrar.svg'
+import Alerta from './Alerta.vue'
+
+const error = ref('')
 
 const emit = defineEmits([
     'ocultar-modal',
     'update:nombre',
     'update:cantidad',
     'update:categoria',
+    'guardar-gasto'
 ])
 
 const props = defineProps({
@@ -99,7 +107,39 @@ const props = defineProps({
         },
     }) 
 
+
+const agregarGasto = () => {
+
+    //Validar los campos
+    const {nombre, cantidad, categoria} = props;
+
+    if([nombre, cantidad, categoria].includes('')){
+        error.value = 'Todos los campos son obligatorios'
+        setTimeout(() => {
+            error.value = ''
+        }, 3000);
+        return
+    }
+
+    //Validar cantidad
+    if(cantidad <= 0){
+        error.value = 'Cantidad no válida'
+        setTimeout(() => {
+            error.value = ''
+        }, 3000);
+        return
+    }
+
+    emit('guardar-gasto')
+
+
+
+}
+
+
 </script>
+
+
 
 <style scoped>
 
