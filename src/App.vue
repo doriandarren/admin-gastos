@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import Presupuesto from './components/Presupuesto.vue';
 import ControlPresupuesto from './components/ControlPresupuesto.vue';
 import iconoNuevoGasto from './assets/img/nuevo-gasto.svg'
@@ -127,6 +127,15 @@ const eliminarGasto = () => {
   }
 }
 
+
+const gastosFiltrados = computed(() => {
+  if(filtro.value){
+    return gastos.value.filter(gasto => gasto.categoria === filtro.value )
+  }
+  return gastos.value
+})
+
+
 </script>
 
 <template>
@@ -164,10 +173,10 @@ const eliminarGasto = () => {
       />
 
       <div class="listado-gastos contenedor">
-        <h2>{{ gastos.length > 0 ? 'Gastos' : 'No hay gastos'}}</h2>
+        <h2>{{ gastosFiltrados.length > 0 ? 'Gastos' : 'No hay gastos'}}</h2>
 
         <Gasto 
-          v-for="gasto in gastos"
+          v-for="gasto in gastosFiltrados"
           :key="gasto.id"
           :gasto="gasto"
           @seleccionar-gasto="seleccionarGasto"
